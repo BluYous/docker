@@ -46,6 +46,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: bluyous/goldendict
-          short-description: GoldenDict VNC版
-          readme-filepath: ./goldendict/README.md
+          repository: bluyous/projector-idea-u
+          short-description: Run JetBrains IDEs remotely with Docker
+          readme-filepath: ./projector-docker/README.md
