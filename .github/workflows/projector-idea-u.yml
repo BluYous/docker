@@ -14,8 +14,8 @@ jobs:
       - name: clone projector-docker
         run: git clone https://github.com/JetBrains/projector-docker.git ./projector-docker
 
-      - name: clone projector-docker
-        run: downloadUrl=https://download-cdn.jetbrains.com/idea/ideaIU-2022.3.1.tar.gz
+      - name: get downloadUrl
+        run: echo "downloadUrl=https://download-cdn.jetbrains.com/idea/ideaIU-2022.3.1.tar.gz" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
@@ -36,7 +36,7 @@ jobs:
           file:  ./projector-docker/Dockerfile
           platforms: linux/amd64
           build-args: |
-            downloadUrl=$downloadUrl
+            downloadUrl=${{ env.downloadUrl }}
             buildGradle=true
           push: true
           tags: |
