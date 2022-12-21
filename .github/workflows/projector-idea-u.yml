@@ -8,8 +8,14 @@ jobs:
     name: buildx tag
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: clone projector-server
+        run: git clone https://github.com/JetBrains/projector-server.git ./projector-server
+
+      - name: clone projector-docker
+        run: git clone https://github.com/JetBrains/projector-docker.git ./projector-docker
+
+      - name: clone projector-docker
+        run: downloadUrl=https://download-cdn.jetbrains.com/idea/ideaIU-2022.3.1.tar.gz
 
       - name: Set up Docker Buildx
         id: buildx
@@ -26,12 +32,15 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./goldendict
-          file:  ./goldendict/Dockerfile
+          context: ./
+          file:  ./projector-docker/Dockerfile
           platforms: linux/amd64
+          build-args: |
+            downloadUrl=$downloadUrl
+            buildGradle=true
           push: true
           tags: |
-            bluyous/goldendict:latest
+            bluyous/projector-idea-u:latest
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
