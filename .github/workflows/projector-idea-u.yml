@@ -1,0 +1,42 @@
+name: projector-idea-u
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: buildx tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: latest
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./goldendict
+          file:  ./goldendict/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            bluyous/goldendict:latest
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: bluyous/goldendict
+          short-description: GoldenDict VNC版
+          readme-filepath: ./goldendict/README.md
