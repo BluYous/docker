@@ -17,6 +17,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: set imageName
+        run: echo imageName=goldendict >>"$GITHUB_ENV"
+
       - name: get version and download url
         run: |
           json=$(curl -sX GET "https://api.github.com/repos/xiaoyifang/goldendict/releases?per_page=1")
@@ -45,13 +48,14 @@ jobs:
             downloadUrl=${{ env.downloadUrl }}
           push: true
           tags: |
-            bluyous/goldendict:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: bluyous/goldendict
+          repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
           short-description: GoldenDict VNC版
           readme-filepath: ./goldendict/README.md
