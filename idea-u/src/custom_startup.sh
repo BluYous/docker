@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -ex
-START_COMMAND="/opt/GoldenDict/AppRun"
-PGREP="/opt/GoldenDict/AppRun"
+START_COMMAND="/opt/idea-u/bin/idea.sh"
+PGREP="/opt/idea-u/bin/idea.sh"
 export MAXIMIZE="true"
-export MAXIMIZE_NAME="GoldenDict"
+export MAXIMIZE_NAME="IntelliJ IDEA Ultimate"
 MAXIMIZE_SCRIPT=$STARTUPDIR/maximize_window.sh
 DEFAULT_ARGS=""
 ARGS=${APP_ARGS:-$DEFAULT_ARGS}

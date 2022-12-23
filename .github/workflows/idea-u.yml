@@ -1,23 +1,26 @@
-name: projector-idea-u
+name: idea-u
 
 on:
+  push:
+    paths:
+    - 'idea-u/Dockerfile'
+    - 'idea-u/src/**'
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 */1 * *'
 
 jobs:
   job1:
     name: buildx tag
     runs-on: ubuntu-latest
     steps:
-      - name: clone projector-server
-        run: git clone https://github.com/JetBrains/projector-server.git ./projector-server
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: set imageName
         run: echo imageName=projector-idea-u >>"$GITHUB_ENV"
 
-      - name: clone projector-docker
-        run: git clone https://github.com/JetBrains/projector-docker.git ./projector-docker
-
-      - name: get ideaVersion
+      - name: get version and download url
         run: |
           json=$(curl -sX GET "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
           echo version="$(echo "$json" | jq -r ".IIU[0].majorVersion")" >>"$GITHUB_ENV"
@@ -38,21 +41,21 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file:  ./projector-docker/Dockerfile
+          context: ./idea-u
+          file:  ./idea-u/Dockerfile
           platforms: linux/amd64
           build-args: |
             downloadUrl=${{ env.downloadUrl }}
-            buildGradle=true
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.version }}
+
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
-          short-description: Run JetBrains IDEs remotely with Docker
-          readme-filepath: ./projector-docker/README.md
+          short-description: IntelliJ IDEA Ultimate VNC 版
+          readme-filepath: ./idea-u/README.md

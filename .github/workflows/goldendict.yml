@@ -57,5 +57,5 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
-          short-description: GoldenDict VNC版
+          short-description: GoldenDict VNC 版
           readme-filepath: ./goldendict/README.md
