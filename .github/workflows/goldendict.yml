@@ -49,7 +49,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.version }}
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
