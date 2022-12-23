@@ -10,9 +10,9 @@ WORKDIR $HOME
 
 ######### Customize Container Here ###########
 
-
+ARG downloadUrl
 COPY ./src $INST_SCRIPTS/src/
-RUN bash $INST_SCRIPTS/src/install.sh  && rm -rf $INST_SCRIPTS/src/
+RUN bash $INST_SCRIPTS/src/install.sh $downloadUrl && rm -rf $INST_SCRIPTS/src/
 
 COPY ./src/custom_startup.sh $STARTUPDIR/custom_startup.sh
 RUN chmod +x $STARTUPDIR/custom_startup.sh
