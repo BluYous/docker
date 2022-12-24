@@ -6,3 +6,4 @@ sed -i -E "s/# idea.config.path=\\$\{user.home}\/.IntelliJIdea\/config/idea.conf
 sed -i -E "s/# idea.system.path=\\$\{user.home}\/.IntelliJIdea\/system/idea.system.path=\/config\/system/g" /opt/idea-u/bin/idea.properties
 mkdir /config
 chown -R 1000:0 /config
+chmod 666 /opt/idea-u/bin/idea64.vmoptions
