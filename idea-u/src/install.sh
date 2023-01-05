@@ -9,3 +9,20 @@ sed -i -E "s/# idea.log.path/idea.log.path/g" /opt/idea-u/bin/idea.properties
 mkdir /config
 chown -R 1000:0 /config
 chmod 666 /opt/idea-u/bin/idea64.vmoptions
+
+# Install PowerShell
+# Update the list of packages
+sudo apt-get update
+# Install pre-requisite packages.
+sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+# Register the Microsoft repository GPG keys
+sudo dpkg -i packages-microsoft-prod.deb
+# Update the list of packages after we added packages.microsoft.com
+sudo apt-get update
+# Install PowerShell
+sudo apt-get install -y powershell
+
+# Install JDK 
+sudo apt-get install -y openjdk-17-jdk
