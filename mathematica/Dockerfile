@@ -10,7 +10,7 @@ WORKDIR $HOME
 
 ######### Customize Container Here ###########
 
-
+ARG version
 COPY ./src $INST_SCRIPTS/src/
 RUN bash $INST_SCRIPTS/src/install.sh $version && rm -rf $INST_SCRIPTS/src/
 

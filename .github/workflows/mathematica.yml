@@ -10,7 +10,7 @@ on:
 
 jobs:
   job1:
-    name: buildx tag
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
