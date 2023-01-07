@@ -4,3 +4,4 @@ chmod +x /tmp/GoldenDict.AppImage;
 cd /opt;
 /tmp/GoldenDict.AppImage --appimage-extract;
 mv ./squashfs-root ./GoldenDict
+rm -rf /tmp/GoldenDict.AppImage
