@@ -24,7 +24,7 @@ jobs:
         run: |
           json=$(curl -sX GET "https://api.github.com/repos/xiaoyifang/goldendict/releases?per_page=1")
           echo version="$(echo "$json" | jq -r ".[0].tag_name")" >>"$GITHUB_ENV"
-          echo downloadUrl="$(echo "$json" | jq -r ".[0].assets[].browser_download_url" | grep ".\AppImage" | tail -n 1)" >>"$GITHUB_ENV"
+          echo downloadUrl="$(echo "$json" | jq -r ".[0].assets[].browser_download_url" | grep "\.AppImage" | tail -n 1)" >>"$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         id: buildx
