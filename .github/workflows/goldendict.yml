@@ -3,8 +3,8 @@ name: goldendict
 on:
   push:
     paths:
-    - 'goldendict/Dockerfile'
-    - 'goldendict/src/**'
+      - 'goldendict/Dockerfile'
+      - 'goldendict/src/**'
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
@@ -22,9 +22,14 @@ jobs:
 
       - name: get version and download url
         run: |
+          #!/bin/bash
           json=$(curl -sX GET "https://api.github.com/repos/xiaoyifang/goldendict/releases?per_page=1")
           echo version="$(echo "$json" | jq -r ".[0].tag_name")" >>"$GITHUB_ENV"
           echo downloadUrl="$(echo "$json" | jq -r ".[0].assets[].browser_download_url" | grep "\.AppImage" | tail -n 1)" >>"$GITHUB_ENV"
+          TAGS=$(curl -s curl -L -s 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
+          if echo "$TAGS" | grep -q '${{ env.version }}'; then
+            exit 0
+          fi
 
       - name: Set up Docker Buildx
         id: buildx
@@ -42,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./goldendict
-          file:  ./goldendict/Dockerfile
+          file: ./goldendict/Dockerfile
           platforms: linux/amd64
           build-args: |
             downloadUrl=${{ env.downloadUrl }}
