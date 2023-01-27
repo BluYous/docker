@@ -3,8 +3,8 @@ name: idea-u
 on:
   push:
     paths:
-    - 'idea-u/Dockerfile'
-    - 'idea-u/src/**'
+      - 'idea-u/Dockerfile'
+      - 'idea-u/src/**'
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
@@ -23,26 +23,36 @@ jobs:
       - name: get version and download url
         run: |
           json=$(curl -sX GET "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
-          echo version="$(echo "$json" | jq -r ".IIU[0].majorVersion")" >>"$GITHUB_ENV"
-          echo downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")" >>"$GITHUB_ENV"
-
+          version="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
+          downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
+          TAGS=$(curl -s curl -L -s 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
+          if echo "$TAGS" | grep -q "$version"; then
+            echo "skip build because $version already exists"
+            exit 0
+          fi
+          echo version="$version" >>"$GITHUB_ENV"
+          echo downloadUrl="$downloadUrl" >>"$GITHUB_ENV"
+          
       - name: Set up Docker Buildx
+        if: ${{ env.version != '' }}
         id: buildx
         uses: docker/setup-buildx-action@v2
         with:
           version: latest
 
       - name: Login to DockerHub
+        if: ${{ env.version != '' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
+        if: ${{ env.version != '' }}
         uses: docker/build-push-action@v2
         with:
           context: ./idea-u
-          file:  ./idea-u/Dockerfile
+          file: ./idea-u/Dockerfile
           platforms: linux/amd64
           build-args: |
             downloadUrl=${{ env.downloadUrl }}
@@ -52,6 +62,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.version }}
 
       - name: Docker Hub Description
+        if: ${{ env.version != '' }}
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
