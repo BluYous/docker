@@ -28,7 +28,7 @@ jobs:
           downloadUrl="$(echo "$json" | jq -r ".[0].assets[].browser_download_url" | grep "\.AppImage" | tail -n 1)"
           TAGS=$(curl -s curl -L -s 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
           if echo "$TAGS" | grep -q "$version"; then
-            exit 0
+            exit 1
           fi
           echo version="$version" >>"$GITHUB_ENV"
           echo downloadUrl="$downloadUrl" >>"$GITHUB_ENV"
