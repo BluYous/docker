@@ -1,7 +1,8 @@
+#!/bin/bash
 set -ex
 cd /tmp
-wget -q $1 -O - | tar -xz
-find . -maxdepth 1 -type d -name * -execdir mv {} /opt/idea-u \;
+curl -sLRJ "$1" | tar -xz
+find . -maxdepth 1 -type d -name "*" -execdir mv {} /opt/idea-u \;
 sed -i -E "s/# idea.config.path=\\$\{user.home}\/.IntelliJIdea\/config/idea.config.path=\/config\/config/g" /opt/idea-u/bin/idea.properties
 sed -i -E "s/# idea.system.path=\\$\{user.home}\/.IntelliJIdea\/system/idea.system.path=\/config\/system/g" /opt/idea-u/bin/idea.properties
 sed -i -E "s/# idea.plugins.path/idea.plugins.path/g" /opt/idea-u/bin/idea.properties
@@ -24,5 +25,5 @@ apt-get update
 # Install PowerShell
 apt-get install -y powershell
 
-# Install JDK 
+# Install JDK
 apt-get install -y openjdk-17-jdk
