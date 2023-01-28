@@ -22,11 +22,11 @@ jobs:
 
       - name: get version and download url
         run: |
-          json=$(curl -sX GET "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
+          json=$(curl -sLRJ "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
           version="$(echo "$json" | jq -r ".IIU[0].version")"
           majorVersion="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
           downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
-          TAGS=$(curl -s curl -L -s 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
+          TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
           if echo "$TAGS" | grep -q "$version"; then
             echo "skip build because $version already exists"
             exit 0
