@@ -27,7 +27,8 @@ jobs:
         run: echo imageName=idea-u >>"$GITHUB_ENV"
 
       - name: get version and download url
-        FORCE_BUILD: ${{ inputs.force_build }}
+        env:
+          FORCE_BUILD: ${{ inputs.force_build }}
         run: |
           set -e
           json=$(curl -sLRJ "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
