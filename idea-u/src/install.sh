@@ -27,3 +27,6 @@ apt-get install -y powershell
 
 # Install JDK
 apt-get install -y openjdk-17-jdk
+
+# Install firefox
+curl -sLRJ "https://raw.githubusercontent.com/kasmtech/workspaces-images/develop/src/ubuntu/install/firefox/install_firefox.sh" | bash

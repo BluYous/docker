@@ -6,6 +6,12 @@ on:
       - 'idea-u/Dockerfile'
       - 'idea-u/src/**'
   workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force Build?'
+        required: true
+        type: boolean
+        default: false
   schedule:
     - cron: '0 0 * * *'
 
@@ -21,19 +27,23 @@ jobs:
         run: echo imageName=idea-u >>"$GITHUB_ENV"
 
       - name: get version and download url
+        FORCE_BUILD: ${{ inputs.force_build }}
         run: |
+          set -e
           json=$(curl -sLRJ "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
           version="$(echo "$json" | jq -r ".IIU[0].version")"
           majorVersion="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
           downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
           TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
-          if echo "$TAGS" | grep -q "$version"; then
+          if [ '${{ github.event_name }}' != 'push' ] && [ \( '${{ github.event_name }}' = 'workflow_dispatch' \) -a \( "$FORCE_BUILD" = 'false' \) ] && echo "$TAGS" | grep -q "$version"; then
             echo "skip build because $version already exists"
             exit 0
           fi
-          echo version="$version" >>"$GITHUB_ENV"
-          echo majorVersion="$majorVersion" >>"$GITHUB_ENV"
-          echo downloadUrl="$downloadUrl" >>"$GITHUB_ENV"
+          {
+            echo version="$version"
+            echo majorVersion="$majorVersion"
+            echo downloadUrl="$downloadUrl"
+          } >>"$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         if: ${{ env.version != '' }}
