@@ -45,21 +45,21 @@ jobs:
           } >>"$GITHUB_ENV"
 
       - name: Set up Docker Buildx
-        if: ${{ env.version != '' }}
+        if: ${{ env.version != '' && env.downloadUrl != '' }}
         id: buildx
         uses: docker/setup-buildx-action@v2
         with:
           version: latest
 
       - name: Login to DockerHub
-        if: ${{ env.version != '' }}
+        if: ${{ env.version != '' && env.downloadUrl != '' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        if: ${{ env.version != '' }}
+        if: ${{ env.version != '' && env.downloadUrl != '' }}
         uses: docker/build-push-action@v2
         with:
           context: ./goldendict
@@ -73,7 +73,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.version }}
 
       - name: Docker Hub Description
-        if: ${{ env.version != '' }}
+        if: ${{ env.version != '' && env.downloadUrl != '' }}
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
