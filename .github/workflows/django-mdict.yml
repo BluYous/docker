@@ -13,6 +13,9 @@ jobs:
         with:
           repository: jiangnianshun/django-mdict
 
+      - name: add executable permissions
+        run: chmod +x *.sh
+
       - name: set imageName
         run: echo imageName=django-mdict >>"$GITHUB_ENV"
 
