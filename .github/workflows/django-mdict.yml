@@ -48,3 +48,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
           short-description: 通过 GitHub Actions 自动构建的 django-mdict
+          readme-filepath: ./readme.md
