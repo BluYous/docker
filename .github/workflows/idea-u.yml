@@ -32,7 +32,7 @@ jobs:
         run: |
           set -e
           json=$(curl -sLRJ "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
-          version="$(echo "$json" | jq -r ".IIU[0].version")"
+          version="$(echo "$json" | jq -r ".IIU[0].build")"
           majorVersion="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
           downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
           TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
