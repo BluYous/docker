@@ -32,36 +32,38 @@ jobs:
         run: |
           set -e
           json=$(curl -sLRJ "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release")
-          version="$(echo "$json" | jq -r ".IIU[0].build")"
+          version="$(echo "$json" | jq -r ".IIU[0].version")"
+          build="$(echo "$json" | jq -r ".IIU[0].build")"
           majorVersion="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
           downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
           TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
-          if [ '${{ github.event_name }}' != 'push' ] && [ \( '${{ github.event_name }}' = 'workflow_dispatch' \) -a \( "$FORCE_BUILD" = 'false' \) ] && echo "$TAGS" | grep -q "$version"; then
-            echo "skip build because $version already exists"
+          if [ '${{ github.event_name }}' != 'push' ] && [ \( '${{ github.event_name }}' = 'workflow_dispatch' \) -a \( "$FORCE_BUILD" = 'false' \) ] && echo "$TAGS" | grep -q "$build"; then
+            echo "skip build because $build already exists"
             exit 0
           fi
           {
             echo version="$version"
+            echo build="$build"
             echo majorVersion="$majorVersion"
             echo downloadUrl="$downloadUrl"
           } >>"$GITHUB_ENV"
 
       - name: Set up Docker Buildx
-        if: ${{ env.version != '' && env.downloadUrl != '' }}
+        if: ${{ env.build != '' && env.downloadUrl != '' }}
         id: buildx
         uses: docker/setup-buildx-action@v2
         with:
           version: latest
 
       - name: Login to DockerHub
-        if: ${{ env.version != '' && env.downloadUrl != '' }}
+        if: ${{ env.build != '' && env.downloadUrl != '' }}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        if: ${{ env.version != '' && env.downloadUrl != '' }}
+        if: ${{ env.build != '' && env.downloadUrl != '' }}
         uses: docker/build-push-action@v2
         with:
           context: ./idea-u
@@ -72,15 +74,16 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.build }}
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.version }}
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:${{ env.majorVersion }}
 
       - name: Docker Hub Description
-        if: ${{ env.version != '' && env.downloadUrl != '' }}
+        if: ${{ env.build != '' && env.downloadUrl != '' }}
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
-          short-description: IntelliJ IDEA Ultimate VNC 版
+          short-description: IntelliJ IDEA Ultimate ${{ env.version }} VNC
           readme-filepath: ./idea-u/README.md
