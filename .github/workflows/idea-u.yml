@@ -36,8 +36,15 @@ jobs:
           build="$(echo "$json" | jq -r ".IIU[0].build")"
           majorVersion="$(echo "$json" | jq -r ".IIU[0].majorVersion")"
           downloadUrl="$(echo "$json" | jq -r ".IIU[0].downloads.linux.link")"
-          TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
-          if [ '${{ github.event_name }}' != 'push' ] && [ \( '${{ github.event_name }}' = 'workflow_dispatch' \) -a \( "$FORCE_BUILD" = 'false' \) ] && echo "$TAGS" | grep -q "$build"; then
+          tags=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
+          force_build_docker=0
+          if [ '${{ github.event_name }}' = 'push' ]; then
+            force_build_docker=1
+          fi
+          if [ "$FORCE_BUILD" = 'true' ]; then
+            force_build_docker=1
+          fi
+          if ! $force_build_docker && echo "$tags" | grep -q "$build"; then
             echo "skip build because $build already exists"
             exit 0
           fi
