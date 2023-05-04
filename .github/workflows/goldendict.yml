@@ -34,9 +34,19 @@ jobs:
           json=$(curl -sLRJ "https://api.github.com/repos/xiaoyifang/goldendict/releases?per_page=1")
           version="$(echo "$json" | jq -r ".[0].tag_name")"
           downloadUrl="$(echo "$json" | jq -r ".[0].assets[].browser_download_url" | grep "\.AppImage" | tail -n 1)"
-          TAGS=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
-          if [ '${{ github.event_name }}' != 'push' ] && [ \( '${{ github.event_name }}' = 'workflow_dispatch' \) -a \( "$FORCE_BUILD" = 'false' \) ] && echo "$TAGS" | grep -q "$version"; then
-            echo "skip build because $version already exists"
+          tags=$(curl -sLRJ 'https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}/tags?page_size=1024' | jq -r '."results"[]["name"]')
+          force_build_docker=0
+          if [ "$GITHUB_EVENT_NAME" = 'push' ]; then
+            force_build_docker=1
+          fi
+          if [ "$FORCE_BUILD" = 'true' ]; then
+            force_build_docker=1
+          fi
+          if [ "$force_build_docker" -eq 0 ] && [ "$(
+            echo "$tags" | grep -q "$build"
+            echo $?
+          )" -eq 0 ]; then
+            echo "skip build because $build already exists"
             exit 0
           fi
           {
