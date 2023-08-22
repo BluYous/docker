@@ -13,6 +13,7 @@ curl -fsSL "https://raw.githubusercontent.com/linuxserver/docker-mods/universal-
 apt-get install -y nano
 apt-get install -y git
 apt-get install -y wget
+apt-get install -y unzip
 apt-get install -y iputils-ping iproute2
 
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release" | jq -r ".IIU[0].downloads.linux.link")
