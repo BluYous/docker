@@ -7,7 +7,7 @@ on:
       - 'rdesktop/src/**'
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * SUN'
+    - cron: '0 16 * * SAT'
 
 jobs:
   job1:
@@ -19,6 +19,9 @@ jobs:
 
       - name: set imageName
         run: echo imageName=rdesktop >>"$GITHUB_ENV"
+
+      - name: generate FILE__STATIC_RESOURCE_HOST file
+        run: echo "${{ secrets.STATIC_RESOURCE_HOST }}" >>./rdesktop/src/FILE__STATIC_RESOURCE_HOST
 
       - name: Set up Docker Buildx
         id: buildx
@@ -38,8 +41,6 @@ jobs:
           context: ./rdesktop
           file: ./rdesktop/Dockerfile
           platforms: linux/amd64
-          build-args: |
-            STATIC_RESOURCE_HOST=${{ secrets.STATIC_RESOURCE_HOST }}
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
