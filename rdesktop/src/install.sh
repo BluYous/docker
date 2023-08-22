@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 set -o pipefail
-if [ ! -e FILE__STATIC_RESOURCE_HOST ]; then
-  echo "FILE__STATIC_RESOURCE_HOST does not exist!"
+if [ ! -e "/tmp/FILE__STATIC_RESOURCE_HOST" ]; then
+  echo "/tmp/FILE__STATIC_RESOURCE_HOST does not exist!"
   exit 1
 fi
-STATIC_RESOURCE_HOST="$(cat /tmp/FILE__STATIC_RESOURCE_HOST)"
-rm -f /tmp/FILE__STATIC_RESOURCE_HOST
+STATIC_RESOURCE_HOST="$(cat "/tmp/FILE__STATIC_RESOURCE_HOST")"
+rm -f "/tmp/FILE__STATIC_RESOURCE_HOST"
 # Update repositories
 curl -fsSL "https://raw.githubusercontent.com/linuxserver/docker-mods/universal-internationalization/root/etc/s6-overlay/s6-rc.d/init-mod-universal-internationalization-install/run" | bash -
 
