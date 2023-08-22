@@ -7,7 +7,12 @@ if [ ! -e "/tmp/FILE__STATIC_RESOURCE_HOST" ]; then
 fi
 STATIC_RESOURCE_HOST="$(cat "/tmp/FILE__STATIC_RESOURCE_HOST")"
 rm -f "/tmp/FILE__STATIC_RESOURCE_HOST"
-# Update repositories
+# update LANG and time zone
+echo 'LANG="C.UTF-8"' >>/etc/environment
+echo 'LC_ALL="C.UTF-8"' >>/etc/environment
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# install internationalization
 curl -fsSL "https://raw.githubusercontent.com/linuxserver/docker-mods/universal-internationalization/root/etc/s6-overlay/s6-rc.d/init-mod-universal-internationalization-install/run" | bash -
 
 # Utilities
