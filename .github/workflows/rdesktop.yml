@@ -38,6 +38,8 @@ jobs:
           context: ./rdesktop
           file: ./rdesktop/Dockerfile
           platforms: linux/amd64
+          build-args: |
+            STATIC_RESOURCE_HOST=${{ secrets.STATIC_RESOURCE_HOST }}
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest

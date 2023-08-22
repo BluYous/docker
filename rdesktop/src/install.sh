@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 set -o pipefail
+if [ -z "$1" ]; then
+  echo "static resource host is required!"
+  exit 1
+fi
+STATIC_RESOURCE_HOST="$1"
 # Update repositories
 curl -fsSL "https://raw.githubusercontent.com/linuxserver/docker-mods/universal-internationalization/root/etc/s6-overlay/s6-rc.d/init-mod-universal-internationalization-install/run" | bash -
 
@@ -10,14 +15,20 @@ apt-get install -y git
 apt-get install -y wget
 apt-get install -y iputils-ping iproute2
 
-cd /tmp
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release" | jq -r ".IIU[0].downloads.linux.link")
 curl -fsSL "$download_url" | tar -zxC "/opt"
-mv "$(ls -dt "/opt/idea-IU-*")" /opt/idea-IU
-sed -i -E "s/# idea.config.path=\\$\{user.home}\/.IntelliJIdea\/config/idea.config.path=\/config\/config/g" /opt/idea-u/bin/idea.properties
-sed -i -E "s/# idea.system.path=\\$\{user.home}\/.IntelliJIdea\/system/idea.system.path=\/config\/system/g" /opt/idea-u/bin/idea.properties
-sed -i -E "s/# idea.plugins.path/idea.plugins.path/g" /opt/idea-u/bin/idea.properties
-sed -i -E "s/# idea.log.path/idea.log.path/g" /opt/idea-u/bin/idea.properties
+mv "$(ls -dt "/opt/idea-IU-"*)" "/opt/idea-IU"
+sed -i -E "s/# idea.config.path=\\$\{user.home}\/.IntelliJIdea\/config/idea.config.path=\/config\/config/g" /opt/idea-IU/bin/idea.properties
+sed -i -E "s/# idea.system.path=\\$\{user.home}\/.IntelliJIdea\/system/idea.system.path=\/config\/system/g" /opt/idea-IU/bin/idea.properties
+sed -i -E "s/# idea.plugins.path/idea.plugins.path/g" /opt/idea-IU/bin/idea.properties
+sed -i -E "s/# idea.log.path/idea.log.path/g" /opt/idea-IU/bin/idea.properties
+curl -fsSL "$STATIC_RESOURCE_HOST/soft/jetbra.zip" -o "/tmp/jetbra.zip"
+unzip "/tmp/jetbra.zip" -d "/opt/idea-IU"
+{
+  echo '-javaagent:/opt/idea-IU/jetbra/ja-netfilter.jar=jetbrains'
+  echo '--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED'
+  echo '--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED'
+} >>"/opt/idea-IU/bin/idea64.vmoptions"
 
 # NodeJS
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs

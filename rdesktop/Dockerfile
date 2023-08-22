@@ -1,4 +1,4 @@
 FROM linuxserver/rdesktop:ubuntu-xfce
-
-COPY install.sh /tmp/
-RUN bash /tmp/install.sh && rm -f install.sh
+ARG STATIC_RESOURCE_HOST
+COPY "./src/install.sh" "/tmp/"
+RUN bash "/tmp/install.sh" "$STATIC_RESOURCE_HOST" && rm -f "/tmp/install.sh"
