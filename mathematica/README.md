@@ -1,1 +1,0 @@
-# Mathematica VNC 版

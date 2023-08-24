@@ -1,1 +1,0 @@
-# GoldenDict VNC 版

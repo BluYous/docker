@@ -20,8 +20,10 @@ apt-get install -y nano
 apt-get install -y git
 apt-get install -y wget
 apt-get install -y unzip
+apt-get install -y xz-utils
 apt-get install -y iputils-ping iproute2
 
+# IDEA
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release" | jq -r ".IIU[0].downloads.linux.link")
 curl -fsSL "$download_url" | tar -zxC "/opt"
 mv "$(ls -dt "/opt/idea-IU-"*)" "/opt/idea-IU"
@@ -48,6 +50,16 @@ download_url=$(curl -fsSL "https://www.scootersoftware.com/download" | grep -oE 
 curl -fsSL -q "https://www.scootersoftware.com$download_url" -o "/tmp/bcompare.deb"
 apt-get install -y '/tmp/bcompare.deb'
 
+# GoldenDict
+download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://api.github.com/repos/xiaoyifang/goldendict-ng/releases/latest" | jq  -r ".assets[].browser_download_url" | grep "AppImage"  | sed -n '$p')
+curl -fsSL -q "$download_url" -o "/tmp/GoldenDict.AppImage"
+chmod +x '/tmp/GoldenDict.AppImage'
+'/tmp/GoldenDict.AppImage' --appimage-extract
+mv ./squashfs-root /opt/GoldenDict
+ln -s /usr/lib/x86_64-linux-gnu/nss/* /opt/GoldenDict/usr/lib/
+sed -i '2i export QTWEBENGINE_DISABLE_SANDBOX=1' /opt/GoldenDict/AppRun
+
+# remove cache
 apt-get autoclean &&
   rm -rf \
     /var/lib/apt/lists/* \
