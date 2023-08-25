@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GoldenDict
+TryExec=/opt/GoldenDict/AppRun
+Exec=/opt/GoldenDict/AppRun
+Icon=/opt/GoldenDict/goldendict.png

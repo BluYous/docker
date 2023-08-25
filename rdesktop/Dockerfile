@@ -1,3 +1,3 @@
 FROM linuxserver/rdesktop:ubuntu-xfce
-COPY "./src/*" "/tmp/"
+COPY "./root/*" "/"
 RUN bash "/tmp/install.sh" && rm -f "/tmp/install.sh"

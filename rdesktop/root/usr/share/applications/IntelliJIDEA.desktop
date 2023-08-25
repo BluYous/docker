@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA
+TryExec=/opt/idea-IU/bin/idea.sh
+Exec=/opt/idea-IU/bin/idea.sh
+Icon=/opt/idea-IU/bin/idea.png
