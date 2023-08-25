@@ -14,16 +14,18 @@ rm -f "/FILE__STATIC_RESOURCE_HOST"
 } >>/etc/environment
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
-# install internationalization
-curl -fsSL "https://raw.githubusercontent.com/linuxserver/docker-mods/universal-internationalization/root/etc/s6-overlay/s6-rc.d/init-mod-universal-internationalization-install/run" | bash -
+# install fonts
+apt-get update
+apt-get install -y fonts-noto
 
 # Utilities
-apt-get install -y nano
-apt-get install -y git
-apt-get install -y wget
-apt-get install -y unzip
-apt-get install -y xz-utils
-apt-get install -y iputils-ping iproute2
+apt-get install -y nano \
+  git \
+  wget \
+  unzip \
+  xz-utils \
+  iputils-ping \
+  iproute2
 
 # IDEA
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release" | jq -r ".IIU[0].downloads.linux.link")
@@ -67,7 +69,7 @@ curl -fsSL -q "$download_url" -o "/tmp/peazip.deb"
 apt-get install -y libqt5printsupport5 libqt5x11extras5
 apt-get install -y '/tmp/peazip.deb'
 
-# sougou
+# 搜狗输入法
 apt install -y fcitx
 cp /usr/share/applications/fcitx.desktop /etc/xdg/autostart/
 apt install -y libqt5qml5 libqt5quick5 libqt5quickwidgets5 qml-module-qtquick2 libgsettings-qt1
