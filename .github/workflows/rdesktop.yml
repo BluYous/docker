@@ -21,7 +21,7 @@ jobs:
         run: echo imageName=rdesktop >>"$GITHUB_ENV"
 
       - name: generate FILE__STATIC_RESOURCE_HOST file
-        run: echo "${{ secrets.STATIC_RESOURCE_HOST }}" >>./rdesktop/root/tmp/FILE__STATIC_RESOURCE_HOST
+        run: echo "${{ secrets.STATIC_RESOURCE_HOST }}" >./rdesktop/root/FILE__STATIC_RESOURCE_HOST
 
       - name: Set up Docker Buildx
         id: buildx
