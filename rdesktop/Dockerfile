@@ -1,6 +1,5 @@
 FROM linuxserver/rdesktop:ubuntu-xfce
-COPY root/tmp /tmp
-COPY root/usr /usr
+COPY root/ /
 RUN ls /tmp -dlah
 RUN ls /tmp -lah
 RUN exit 1
