@@ -11,8 +11,9 @@ rm -f "/FILE__STATIC_RESOURCE_HOST"
 {
   echo 'LANG="C.UTF-8"'
   echo 'LC_ALL="C.UTF-8"'
+  echo 'TZ="Asia/Shanghai"'
 } >>/etc/environment
-ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # install fonts
 apt-get update
@@ -25,7 +26,8 @@ apt-get install -y nano \
   unzip \
   xz-utils \
   iputils-ping \
-  iproute2
+  iproute2 \
+  qdirstat
 
 # IDEA
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release" | jq -r ".IIU[0].downloads.linux.link")
@@ -45,6 +47,7 @@ unzip "/tmp/jetbra.zip" -d "/opt/idea-IU"
 
 # NodeJS
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
+npm install --global yarn
 
 # Install JDK
 apt-get install -y openjdk-17-jdk
