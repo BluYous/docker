@@ -40,6 +40,9 @@ sed -i -E "s/# idea.log.path/idea.log.path/g" /opt/idea-IU/bin/idea.properties
 curl -fsSL "$STATIC_RESOURCE_HOST/soft/jetbra.zip" -o "/tmp/jetbra.zip"
 unzip "/tmp/jetbra.zip" -d "/opt/idea-IU"
 {
+  # markdown crash on linux, add this to avoid crashing
+  echo '-Dide.browser.jcef.sandbox.enable=false'
+  # special code
   echo '-javaagent:/opt/idea-IU/jetbra/ja-netfilter.jar=jetbrains'
   echo '--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED'
   echo '--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED'
