@@ -3,7 +3,8 @@ set -e
 set -o pipefail
 
 apk update
-apk add --no-cache jq py3-pip qemu-img
+# bind-tools contains dig
+apk add --no-cache jq py3-pip qemu-img bind-tools
 npm install -g bestroutetb he
 pip install csvkit
 bestroutetb --update
