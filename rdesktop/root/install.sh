@@ -76,9 +76,9 @@ apt-get install -y libqt5printsupport5 libqt5x11extras5
 apt-get install -y '/tmp/peazip.deb'
 
 # 搜狗输入法
-apt install -y fcitx
+apt-get install -y fcitx
 cp /usr/share/applications/fcitx.desktop /etc/xdg/autostart/
-apt install -y libqt5qml5 libqt5quick5 libqt5quickwidgets5 qml-module-qtquick2 libgsettings-qt1
+apt-get install -y libqt5qml5 libqt5quick5 libqt5quickwidgets5 qml-module-qtquick2 libgsettings-qt1
 download_url=$(curl -fsSL --retry 10 --retry-all-errors --retry-connrefused "https://shurufa.sogou.com/linux" | grep -oE 'https[^"]+amd64\.deb')
 curl -fsSL -q "$download_url" -o "/tmp/sogoupinyin.deb"
 apt-get install -y '/tmp/sogoupinyin.deb'
