@@ -52,7 +52,7 @@ jobs:
           readme-filepath: ./cronicle/README.md
 
       - name: record run date
-        run: echo date "+%Y-%m-%d %H:%M:%S %Z">./cronicle/build_date.txt
+        run: date "+%Y-%m-%d %H:%M:%S %Z">./cronicle/build_date.txt
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5.0.0
