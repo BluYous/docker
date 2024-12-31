@@ -5,4 +5,4 @@ RUN        apk add --no-cache nodejs npm git curl perl bash perl-pathtools tar p
                 && bestroutetb --update
 WORKDIR    /
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD        ["sh"]
+CMD        ["sh", "sleep", "infinity"]

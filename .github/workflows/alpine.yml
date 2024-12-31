@@ -3,8 +3,8 @@ name: alpine
 on:
   push:
     paths:
-      - '../../alpine/Dockerfile'
-      - '../../alpine/root/**'
+      - 'alpine/Dockerfile'
+      - 'alpine/root/**'
   workflow_dispatch:
   schedule:
     - cron: '0 16 * * SAT'
