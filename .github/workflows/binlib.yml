@@ -1,10 +1,10 @@
-name: alpine
+name: binlib
 
 on:
   push:
     paths:
-      - 'alpine/Dockerfile'
-      - 'alpine/root/**'
+      - '../../binlib/Dockerfile'
+      - '../../binlib/root/**'
   workflow_dispatch:
   schedule:
     - cron: '0 16 * * SAT'
@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: set imageName
-        run: echo imageName=alpine >>"$GITHUB_ENV"
+        run: echo imageName=binlib >>"$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         id: buildx
@@ -35,8 +35,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./alpine
-          file: ./alpine/Dockerfile
+          context: ./binlib
+          file: ./binlib/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
@@ -48,11 +48,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
-          short-description: alpine
-          readme-filepath: ./alpine/README.md
+          short-description: binlib
+          readme-filepath: ./binlib/README.md
 
       - name: record run date
-        run: date "+%Y-%m-%d %H:%M:%S %Z">./alpine/build_date.txt
+        run: date "+%Y-%m-%d %H:%M:%S %Z">./binlib/build_date.txt
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5.0.0
