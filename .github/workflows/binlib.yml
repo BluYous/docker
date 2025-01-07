@@ -3,8 +3,8 @@ name: binlib
 on:
   push:
     paths:
-      - '../../binlib/Dockerfile'
-      - '../../binlib/root/**'
+      - 'binlib/Dockerfile'
+      - 'binlib/root/**'
   workflow_dispatch:
   schedule:
     - cron: '0 16 * * SAT'
