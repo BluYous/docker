@@ -11,8 +11,8 @@ RUN         apt-get update && \
             mkdir -p '/config/cfst' && \
             touch '/config/cfst/hosts' && \
             sed -i 's|/etc/hosts|/config/cfst/hosts|g' '/opt/cfst/cfst.sh' && \
-            cd '/opt/cfst' && \
             echo 1 | bash /opt/cfst/cfst.sh && \
+            mv '/config/cfst/hosts' '/config/cfst/hosts.example' && \
             rm -rf \
               /config/.cache \
               /var/lib/apt/lists/* \
