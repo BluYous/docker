@@ -9,7 +9,7 @@ RUN         apt-get update && \
             curl -fsSL 'https://raw.githubusercontent.com/vanchKong/cloudflare/refs/heads/main/cfst.sh' -o '/opt/cfst/cfst.sh' && \
             chmod +x '/opt/cfst/cfst.sh' && \
             cd '/opt/cfst' && \
-            echo 1 | /opt/cfst/cfst.sh && \
+            echo 1 | bash /opt/cfst/cfst.sh && \
             rm -rf \
               /config/.cache \
               /var/lib/apt/lists/* \
