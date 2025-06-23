@@ -5,7 +5,7 @@ RUN         apt-get update && \
             apt-get install --no-install-recommends -y nodejs npm curl nano qemu-utils && \
             npm install -g bestroutetb && \
             apt-get autoclean && \
-            curl -fsSL https://raw.githubusercontent.com/vanchKong/cloudflare/refs/heads/main/cfst.sh -o /opt/cfst/cfst.sh \
+            curl -fsSL 'https://raw.githubusercontent.com/vanchKong/cloudflare/refs/heads/main/cfst.sh' -o '/opt/cfst/cfst.sh' \
             rm -rf \
               /config/.cache \
               /var/lib/apt/lists/* \
