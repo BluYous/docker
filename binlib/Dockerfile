@@ -8,6 +8,7 @@ RUN         apt-get update && \
             mkdir -p '/opt/cfst' && \
             curl -fsSL 'https://raw.githubusercontent.com/vanchKong/cloudflare/refs/heads/main/cfst.sh' -o '/opt/cfst/cfst.sh' && \
             chmod +x '/opt/cfst/cfst.sh' && \
+            mkdir -p '/config/cfst' && \
             touch '/config/cfst/hosts' && \
             sed -i 's|/etc/hosts|/config/cfst/hosts|g' '/opt/cfst/cfst.sh' && \
             cd '/opt/cfst' && \
