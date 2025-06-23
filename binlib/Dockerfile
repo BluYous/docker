@@ -11,7 +11,7 @@ RUN         apt-get update && \
             mkdir -p '/config/cfst' && \
             touch '/config/cfst/hosts' && \
             sed -i 's|/etc/hosts|/config/cfst/hosts|g' '/opt/cfst/cfst.sh' && \
-            sed -iE "s/sed -i (.*) ([\/A-Za-z0-9]+$)/sed \1 \2 | sponge \2/" '/opt/cfst/cfst.sh' && \
+            sed -i -E 's/sed -i (.*) ([\/A-Za-z0-9]+$)/sed \1 \2 | sponge \2/' '/opt/cfst/cfst.sh' && \
             echo 1 | bash /opt/cfst/cfst.sh && \
             cp '/config/cfst/hosts' '/config/cfst/hosts.example' && \
             rm -rf \
