@@ -1,0 +1,58 @@
+name: qbittorrent
+
+on:
+  push:
+    paths:
+      - 'qbittorrent/Dockerfile'
+      - 'qbittorrent/root/**'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * SUN'
+
+jobs:
+  job1:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: set imageName
+        run: echo imageName=qbittorrent >>"$GITHUB_ENV"
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          version: latest
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./qbittorrent
+          file: ./qbittorrent/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}:latest
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ secrets.DOCKER_USERNAME }}/${{ env.imageName }}
+          short-description: qbittorrent
+          readme-filepath: ./qbittorrent/README.md
+
+      - name: record run date
+        run: date "+%Y-%m-%d %H:%M:%S %Z">./qbittorrent/build_date.txt
+
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5.0.0
